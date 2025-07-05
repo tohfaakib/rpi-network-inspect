@@ -3,3 +3,4 @@ logs/tshark/*.json
 __pycache__/
 *.pyc
 mitmproxy/
+.idea
