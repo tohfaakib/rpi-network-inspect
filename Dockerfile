@@ -20,5 +20,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY config/block_urls.py /app/
 
-EXPOSE 8081
-CMD ["mitmweb", "--mode", "transparent@8880", "-s", "/app/block_urls.py", "--web-port", "8081"]
+EXPOSE 8083
+CMD ["mitmweb", "--mode", "transparent@8888", "-s", "/app/block_urls.py", "--web-port", "8083", "--listen-host", "0.0.0.0"]
