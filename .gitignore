@@ -1,0 +1,5 @@
+logs/tshark/*.pcapng
+logs/tshark/*.json
+__pycache__/
+*.pyc
+mitmproxy/

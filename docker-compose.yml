@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  mitmproxy:
+    build: .
+    container_name: rpi-network-inspector
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./config:/app
+      - ./mitmproxy:/root/.mitmproxy
+    restart: unless-stopped
+
+  tshark-logger:
+    image: arm64v8/debian
+    container_name: tshark-logger
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./logs/tshark:/logs
+    command: >
+      bash -c "
+        apt update &&
+        apt install -y tshark &&
+        mkdir -p /logs &&
+        while true; do
+          F=/logs/capture_$(date +%Y-%m-%d_%H-%M-%S).pcapng;
+          tshark -i eth0 -w \"$F\" -a duration:3600;
+        done
+      "
+    restart: unless-stopped
+
+  tshark-viewer:
+    image: httpd:alpine
+    container_name: log-viewer
+    volumes:
+      - ./logs/tshark:/usr/local/apache2/htdocs/
+    ports:
+      - "8082:80"
+    restart: unless-stopped
